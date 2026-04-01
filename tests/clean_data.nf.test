@@ -1,0 +1,59 @@
+nextflow_pipeline {
+
+    name "Test Pipeline clean_data.nf"
+    script "../clean_data.nf"
+    tag "pipeline"
+    tag "clean_data"
+
+    // ---------------------------------------------------------------------------
+    // Paired-end: full execution
+    // Verifies trimmed FASTQ files are produced and the index samplesheet is
+    // written with the expected header.
+    // ---------------------------------------------------------------------------
+    test("sarscov2 - paired_end") {
+
+        when {
+            params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                input  = "$projectDir/tests/data/samplesheet.csv"
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().size() > 0 },
+                // FASTP produced trimmed FASTQ files under outdir/trimmed/
+                { assert new File("$outputDir/trimmed").exists() },
+                // FASTP JSON QC reports
+                { assert new File("$outputDir/fastp").exists() },
+                // Index samplesheet written at outdir root with expected header
+                { assert new File("$outputDir/samplesheet.csv").exists() },
+                { assert path("$outputDir/samplesheet.csv").text.readLines()[0] == "sample,fastq_1,fastq_2,strandedness" }
+            )
+        }
+    }
+
+    // ---------------------------------------------------------------------------
+    // Stub run — exercises wiring and container resolution via stub: blocks.
+    // ---------------------------------------------------------------------------
+    test("sarscov2 - paired_end stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                input  = "$projectDir/tests/data/samplesheet.csv"
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success }
+            )
+        }
+    }
+}

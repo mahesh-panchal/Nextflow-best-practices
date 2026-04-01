@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/mahesh-panchal/Nextflow-best-practices/master/nextflow_schema.json",
+  "title": "nextflow-best-practices pipeline parameters",
+  "description": "A demonstration of advanced Nextflow and nf-core best practices.",
+  "type": "object",
+  "$defs": {
+    "input_output_options": {
+      "title": "Input/output options",
+      "type": "object",
+      "fa_icon": "fas fa-terminal",
+      "description": "Define where the pipeline should find input data and save output data.",
+      "required": ["input"],
+      "properties": {
+        "input": {
+          "type": "string",
+          "format": "file-path",
+          "exists": true,
+          "mimetype": "text/csv",
+          "pattern": "^\\S+\\.csv$",
+          "schema": "assets/schemas/schema_input.json",
+          "description": "Path to a CSV samplesheet with columns: sample, fastq_1, fastq_2, strandedness.",
+          "help_text": "The samplesheet must be a comma-separated file with a header row. `fastq_2` is optional (omit for single-end data). Strandedness must be one of `forward`, `reverse`, or `unstranded`.",
+          "errorMessage": "Samplesheet must be a CSV file with no spaces and extension '.csv'",
+          "fa_icon": "fas fa-file-csv"
+        },
+        "outdir": {
+          "type": "string",
+          "format": "directory-path",
+          "description": "Directory where results will be saved.",
+          "default": "results",
+          "fa_icon": "fas fa-folder-open"
+        }
+      }
+    },
+    "reference_genome_options": {
+      "title": "Reference genome options",
+      "type": "object",
+      "fa_icon": "fas fa-dna",
+      "description": "Reference genome files required for quantification (main.nf and quant_data.nf only). These parameters are optional at schema validation time; their existence is verified at runtime when they are used.",
+      "properties": {
+        "salmon_index": {
+          "type": "string",
+          "format": "directory-path",
+          "description": "Path to a pre-built Salmon index directory.",
+          "help_text": "Required when running `main.nf` or `quant_data.nf`. Verified with `checkIfExists: true` at runtime.",
+          "fa_icon": "fas fa-folder"
+        },
+        "gtf": {
+          "type": "string",
+          "format": "file-path",
+          "pattern": "^\\S+\\.gtf(\\.gz)?$",
+          "description": "Genome annotation file in GTF format.",
+          "help_text": "Required when running `main.nf` or `quant_data.nf`. Verified with `checkIfExists: true` at runtime.",
+          "errorMessage": "GTF file must have extension '.gtf' or '.gtf.gz'",
+          "fa_icon": "fas fa-file-alt"
+        },
+        "transcript_fasta": {
+          "type": "string",
+          "format": "file-path",
+          "pattern": "^\\S+\\.(fa|fasta|fna)(\\.gz)?$",
+          "description": "Transcript sequences in FASTA format (used by Salmon in alignment-free mode).",
+          "help_text": "Required when running `main.nf` or `quant_data.nf`. Verified with `checkIfExists: true` at runtime.",
+          "errorMessage": "Transcript FASTA must have extension '.fa', '.fasta', or '.fna' (optionally gzipped)",
+          "fa_icon": "fas fa-file"
+        }
+      }
+    },
+    "generic_options": {
+      "title": "Generic options",
+      "type": "object",
+      "fa_icon": "fas fa-file-import",
+      "description": "Less common options for the pipeline, typically set in a config file.",
+      "properties": {
+        "modules_testdata_base_path": {
+          "type": "string",
+          "description": "Base URL or path for nf-core test datasets. Used by nf-test.",
+          "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/",
+          "hidden": true,
+          "fa_icon": "fas fa-flask"
+        }
+      }
+    }
+  },
+  "allOf": [
+    { "$ref": "#/$defs/input_output_options" },
+    { "$ref": "#/$defs/reference_genome_options" },
+    { "$ref": "#/$defs/generic_options" }
+  ]
+}

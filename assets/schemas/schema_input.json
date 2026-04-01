@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/mahesh-panchal/Nextflow-best-practices/master/assets/schemas/schema_input.json",
+  "title": "nextflow-best-practices samplesheet schema",
+  "description": "Schema for the samplesheet provided via params.input",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "sample": {
+        "type": "string",
+        "pattern": "^\\S+$",
+        "meta": ["id"],
+        "errorMessage": "Sample name must be provided and cannot contain spaces",
+        "fa_icon": "fas fa-vial"
+      },
+      "fastq_1": {
+        "type": "string",
+        "format": "file-path",
+        "exists": true,
+        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+        "errorMessage": "Read 1 FASTQ file must be provided, contain no spaces, and have extension '.fq.gz' or '.fastq.gz'",
+        "fa_icon": "fas fa-file"
+      },
+      "fastq_2": {
+        "type": "string",
+        "format": "file-path",
+        "exists": true,
+        "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+        "errorMessage": "Read 2 FASTQ file (paired-end) must contain no spaces and have extension '.fq.gz' or '.fastq.gz'",
+        "fa_icon": "fas fa-file"
+      },
+      "strandedness": {
+        "type": "string",
+        "enum": ["forward", "reverse", "unstranded", "auto"],
+        "meta": ["strandedness"],
+        "errorMessage": "Strandedness must be one of: 'forward', 'reverse', 'unstranded', or 'auto'",
+        "fa_icon": "fas fa-exchange-alt"
+      }
+    },
+    "required": ["sample", "fastq_1", "strandedness"]
+  }
+}

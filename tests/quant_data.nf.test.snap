@@ -1,0 +1,28 @@
+{
+    "sarscov2 - single_end": {
+        "content": [
+            "quant.sf:md5,f4876d3f327028493e0648b59aebc33a",
+            "quant.genes.sf:md5,609c74711f0d830cd203ee72530ad3d1",
+            "lib_format_counts.json:md5,c7999dfccd32c090d94e5951522eecd4",
+            "cmd_info.json:md5,c0d5d53befac9ad1711a737490e9b835"
+        ],
+        "timestamp": "2026-04-02T12:51:34.629118",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "sarscov2 - paired_end": {
+        "content": [
+            "quant.sf:md5,cb35314f891f8abec47476e2f21ce4fe",
+            "quant.genes.sf:md5,5beb2eba8b332d667639e14ea9bc61ad",
+            "lib_format_counts.json:md5,fb74412d9a564299b3c5477cb77622b9",
+            "cmd_info.json:md5,ecdd4398afc1423ea4f11ec1a8033fa7"
+        ],
+        "timestamp": "2026-04-02T12:51:41.938874",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

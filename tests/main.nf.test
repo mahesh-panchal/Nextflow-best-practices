@@ -1,0 +1,102 @@
+nextflow_pipeline {
+
+    name "Test Pipeline main.nf"
+    script "../main.nf"
+    tag "pipeline"
+    tag "main"
+
+    // -------------------------------------------------------------------------
+    // Stub run — exercises wiring and container resolution via stub: blocks.
+    // -------------------------------------------------------------------------
+    test("sarscov2 - paired_end stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                input            = "$projectDir/tests/data/samplesheet.csv"
+                outdir           = "$outputDir"
+                genome_fasta     = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta"
+                gtf              = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.gtf"
+                transcript_fasta = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/transcriptome.fasta"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success }
+            )
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Paired-end: full end-to-end (trim → index → quantify)
+    // QUANT_DATA builds the Salmon index internally from genome_fasta.
+    // -------------------------------------------------------------------------
+    test("sarscov2 - paired_end") {
+
+        when {
+            params {
+                input            = "$projectDir/tests/data/samplesheet.csv"
+                outdir           = "$outputDir"
+                genome_fasta     = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta"
+                gtf              = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.gtf"
+                transcript_fasta = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/transcriptome.fasta"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().size() > 0 },
+                { assert new File("$outputDir/trimmed").exists() },
+                { assert new File("$outputDir/fastp").exists() },
+                { assert new File("$outputDir/salmon").exists() },
+                { assert snapshot(
+                    // Snapshot only deterministic quantification outputs;
+                    // aux_info/ (fld.gz, meta_info.json) and logs/ (salmon_quant.log)
+                    // are non-deterministic and excluded.
+                    path("$outputDir/salmon/test/quant.sf"),
+                    path("$outputDir/salmon/test/quant.genes.sf"),
+                    path("$outputDir/salmon/test/lib_format_counts.json"),
+                    path("$outputDir/salmon/test/cmd_info.json")
+                ).match() }
+            )
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Single-end: full end-to-end (trim → index → quantify)
+    // -------------------------------------------------------------------------
+    test("sarscov2 - single_end") {
+
+        when {
+            params {
+                input            = "$projectDir/tests/data/samplesheet_single_end.csv"
+                outdir           = "$outputDir"
+                genome_fasta     = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta"
+                gtf              = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.gtf"
+                transcript_fasta = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/transcriptome.fasta"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.trace.succeeded().size() > 0 },
+                { assert new File("$outputDir/trimmed").exists() },
+                { assert new File("$outputDir/fastp").exists() },
+                { assert new File("$outputDir/salmon").exists() },
+                { assert snapshot(
+                    // Snapshot only deterministic quantification outputs;
+                    // aux_info/ (fld.gz, meta_info.json) and logs/ (salmon_quant.log)
+                    // are non-deterministic and excluded.
+                    path("$outputDir/salmon/test/quant.sf"),
+                    path("$outputDir/salmon/test/quant.genes.sf"),
+                    path("$outputDir/salmon/test/lib_format_counts.json"),
+                    path("$outputDir/salmon/test/cmd_info.json")
+                ).match() }
+            )
+        }
+    }
+}

@@ -6,6 +6,7 @@ platforms = ["osx-arm64", "linux-64"]
 version = "1.0.0"
 
 [tasks]
+nf-tests = "nf-test test"
 
 [dependencies]
 nextflow = ">=25.10.4,<26"
