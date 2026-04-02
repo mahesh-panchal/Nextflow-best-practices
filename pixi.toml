@@ -6,7 +6,18 @@ platforms = ["osx-arm64", "linux-64"]
 version = "1.0.0"
 
 [tasks]
-nf-tests = "nf-test test"
+clean-all = "git clean -e .pixi -fdx"
+lint = "nextflow lint -exclude .pixi -exclude nf-test.config ."
+[tasks.nf-tests]
+cmd = "nf-test test --profile {{ profile }}"
+args = [
+    { arg = "profile", default = "docker", "choices" = ["docker", "singularity", "conda"] }
+]
+[tasks.update-nf-tests]
+cmd = "nf-test test --update-snapshot --profile {{ profile }}"
+args = [
+    { arg = "profile", default = "docker", "choices" = ["docker", "singularity", "conda"] }
+]
 
 [dependencies]
 nextflow = ">=25.10.4,<26"
