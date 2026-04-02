@@ -39,12 +39,14 @@
       "fa_icon": "fas fa-dna",
       "description": "Reference genome files required for quantification (main.nf and quant_data.nf only). These parameters are optional at schema validation time; their existence is verified at runtime when they are used.",
       "properties": {
-        "salmon_index": {
+        "genome_fasta": {
           "type": "string",
-          "format": "directory-path",
-          "description": "Path to a pre-built Salmon index directory.",
+          "format": "file-path",
+          "pattern": "^\\S+\\.(fa|fasta|fna)(\\.gz)?$",
+          "description": "Genome sequences in FASTA format.",
           "help_text": "Required when running `main.nf` or `quant_data.nf`. Verified with `checkIfExists: true` at runtime.",
-          "fa_icon": "fas fa-folder"
+          "errorMessage": "Genome FASTA must have extension '.fa', '.fasta', or '.fna' (optionally gzipped)",
+          "fa_icon": "fas fa-file"
         },
         "gtf": {
           "type": "string",
