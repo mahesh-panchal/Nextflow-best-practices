@@ -44,12 +44,6 @@ output {
     }
 }
 
-// ---------------------------------------------------------------------------
-// Validate inputs and convert the samplesheet into a reads channel.
-// nf-schema checks every row against assets/schemas/schema_input.json before any
-// process runs.
-// Column order from schema: sample(meta.id), fastq_1, fastq_2, strandedness(meta.strandedness)
-// ---------------------------------------------------------------------------
 def samplesheet_to_channel(csv) {
     channel.fromList( samplesheetToList( csv, "${projectDir}/assets/schemas/schema_input.json" ) )
         .map { meta, fastq_1, fastq_2 ->
