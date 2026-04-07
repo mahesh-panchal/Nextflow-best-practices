@@ -12,18 +12,22 @@ workflow {
     validateParameters()
     def ch_reads = samplesheet_to_channel( params.input )
 
-    CLEAN_DATA( ch_reads )
+    if("clean" in params.stages){
+        CLEAN_DATA( ch_reads )
+    }
 
-    QUANT_DATA(
-        CLEAN_DATA.out.reads,
-        channel.fromPath( params.genome_fasta,     checkIfExists: true ),
-        channel.fromPath( params.gtf,              checkIfExists: true ),
-        channel.fromPath( params.transcript_fasta, checkIfExists: true )
-    )
+    if("quantify" in params.stages){
+        QUANT_DATA(
+            "clean" in params.stages? CLEAN_DATA.out.reads: ch_reads,
+            channel.fromPath( params.genome_fasta,     checkIfExists: true ),
+            channel.fromPath( params.gtf,              checkIfExists: true ),
+            channel.fromPath( params.transcript_fasta, checkIfExists: true )
+        )
+    }
 
-    def ch_trimmed_reads  = CLEAN_DATA.out.reads
-    def ch_fastp_reports  = CLEAN_DATA.out.json.mix( CLEAN_DATA.out.html )
-    def ch_salmon_results = QUANT_DATA.out.results
+    def ch_trimmed_reads  = "clean" in params.stages? CLEAN_DATA.out.reads: channel.empty()
+    def ch_fastp_reports  = "clean" in params.stages? CLEAN_DATA.out.json.mix( CLEAN_DATA.out.html ): channel.empty()
+    def ch_salmon_results = "quantify" in params.stages? QUANT_DATA.out.results: channel.empty()
 
     publish:
     trimmed = ch_trimmed_reads

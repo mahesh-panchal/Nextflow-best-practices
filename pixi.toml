@@ -45,6 +45,24 @@ args = [
     { arg = "profile", default = "docker", choices = ["docker", "singularity", "conda"] }
 ]
 
+[tasks.demo-main-clean]
+description = "Run the end-to-end pipeline using clean stage only with paired-end test data"
+cmd = """
+echo '
+stages:
+    - clean
+input: tests/data/samplesheet.csv
+outdir: results
+' > tmp.params.yml;
+nextflow run main.nf \
+    -profile {{ profile }} \
+    -params-file tmp.params.yml;
+rm tmp.params.yml
+"""
+args = [
+    { arg = "profile", default = "docker", choices = ["docker", "singularity", "conda"] }
+]
+
 [tasks.demo-clean]
 description = "Run Stage 1: trim and QC reads with paired-end test data"
 cmd = """
