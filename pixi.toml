@@ -19,6 +19,49 @@ args = [
     { arg = "profile", default = "docker", "choices" = ["docker", "singularity", "conda"] }
 ]
 
+# Demo tasks - run each workflow stage with test data
+[tasks.demo-main]
+description = "Run the full end-to-end pipeline (clean + quant) with paired-end test data"
+cmd = """
+nextflow run main.nf \
+    -profile {{ profile }} \
+    --input tests/data/samplesheet.csv \
+    --outdir results \
+    --genome_fasta https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta \
+    --gtf https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.gtf \
+    --transcript_fasta https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/transcriptome.fasta
+"""
+args = [
+    { arg = "profile", default = "docker", choices = ["docker", "singularity", "conda"] }
+]
+
+[tasks.demo-clean]
+description = "Run Stage 1: trim and QC reads with paired-end test data"
+cmd = """
+nextflow run clean_data.nf \
+    -profile {{ profile }} \
+    --input tests/data/samplesheet.csv \
+    --outdir results
+"""
+args = [
+    { arg = "profile", default = "docker", choices = ["docker", "singularity", "conda"] }
+]
+
+[tasks.demo-quant]
+description = "Run Stage 2: quantify expression with paired-end test data"
+cmd = """
+nextflow run quant_data.nf \
+    -profile {{ profile }} \
+    --input tests/data/samplesheet.csv \
+    --outdir results \
+    --genome_fasta https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta \
+    --gtf https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.gtf \
+    --transcript_fasta https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/transcriptome.fasta
+"""
+args = [
+    { arg = "profile", default = "docker", choices = ["docker", "singularity", "conda"] }
+]
+
 [dependencies]
 nextflow = ">=25.10.4,<26"
 nf-core = ">=3.5.2,<4"
