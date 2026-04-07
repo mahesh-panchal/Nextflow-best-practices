@@ -1,18 +1,13 @@
-# Nextflow Best Practices
+# Nextflow Multi-Entry Workflow Demo
 
-My recommendations for Nextflow and nf-core best practices.
+This is a demonstration of how to use multiple entry workflows in Nextflow.
 
-## Nextflow & nf-core: Beyond the Basics
-
-This repository is intended to be a living guide to advanced Nextflow patterns. The reader is expected to be familiar with programming in Nextflow and nf-core. While nf-core provides a good foundation (See [docs/nf-core-trade-offs](docs/nf-core-trade-offs.md)), it revolves around community participation, and as a result, favours ease of composition rather than efficiency. This repository demonstrates how to use the tools to make efficient and user friendly pipelines.
-
-### Key Concepts Demonstrated:
-
-**Multiple Entry Workflows**: Large workflows can become difficult to manage and often users want to run individual stages or multiple stages similar to how one might use Snakemake. Each stage is a standalone script (`clean_data.nf`, `quant_data.nf`) as well as an end-to-end combined entry point (`main.nf`).
-
-**Module Patching**: How to use `nf-core modules patch` to optimize community modules for performance without breaking update compatibility.
-
-**Workflow outputs**: Uses the modern `publish:` + `output {}` pattern (Nextflow ≥ 24.04) instead of `publishDir` directives, keeping publishing logic in the entry workflow and out of reusable modules.
+> [!TIP]
+> **Conclusion**: Using multiple entry workflows simply increases the maintenance burden. 
+In order to use multiple entry workflows with nf-schema, one must either maintain separate schemas
+or gate each stage with a parameter. One main.nf and a `stages` parameter suffices. Writing indices
+means each stage can be run separately. The input can be configured to read a samplesheet using a
+different schema from each stage depending on the value of the `stages` parameter.
 
 ## Pipeline Overview
 
@@ -125,7 +120,3 @@ nextflow run quant_data.nf \
 
 **Outputs:**
 - `results/salmon/` — per-sample Salmon quantification directories
-
----
-
-See [CONTRIBUTORS](CONTRIBUTORS.md) for contribution, development, and testing instructions.
