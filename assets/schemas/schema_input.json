@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/mahesh-panchal/Nextflow-best-practices/master/assets/schemas/schema_input.json",
-  "title": "nextflow-best-practices samplesheet schema",
+  "$id": "https://raw.githubusercontent.com/mahesh-panchal/Nextflow-multi-entry-workflows/master/assets/schemas/schema_input.json",
+  "title": "nextflow-multi-entry-workflows samplesheet schema",
   "description": "Schema for the samplesheet provided via params.input",
   "type": "array",
   "items": {

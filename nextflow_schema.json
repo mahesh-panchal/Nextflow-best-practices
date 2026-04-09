@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/mahesh-panchal/Nextflow-best-practices/master/nextflow_schema.json",
-  "title": "nextflow-best-practices pipeline parameters",
-  "description": "A demonstration of advanced Nextflow and nf-core best practices.",
+  "$id": "https://raw.githubusercontent.com/mahesh-panchal/Nextflow-multi-entry-workflows/master/nextflow_schema.json",
+  "title": "nextflow-multi-entry-workflows pipeline parameters",
+  "description": "A demonstration of multiple entry workflows.",
   "type": "object",
   "$defs": {
     "input_output_options": {
